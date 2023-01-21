@@ -55,7 +55,10 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void deletePostById(long id) {
-        postRepository.deleteById(id);
+        //postRepository.deleteById(id);
+        Post post = postRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundExceprion("Post", "id", id));
+        postRepository.delete(post);
     }
 
     //convert entity to DTO
