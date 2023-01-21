@@ -30,10 +30,11 @@ public class PostController {
     public PostResponse getAllPosts(
             @RequestParam(value = "pageNum", defaultValue = "0", required = false) int pageNum,
             @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
-            @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sortBy
+            @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = "asc", required = false) String sortDir
     ) {
 
-        return postService.getAllPosts(pageNum, pageSize, sortBy);
+        return postService.getAllPosts(pageNum, pageSize, sortBy, sortDir);
     }
 
     //get post by id
