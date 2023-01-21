@@ -29,10 +29,11 @@ public class PostController {
     @GetMapping
     public PostResponse getAllPosts(
             @RequestParam(value = "pageNum", defaultValue = "0", required = false) int pageNum,
-            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize
+            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sortBy
     ) {
 
-        return postService.getAllPosts(pageNum, pageSize);
+        return postService.getAllPosts(pageNum, pageSize, sortBy);
     }
 
     //get post by id
