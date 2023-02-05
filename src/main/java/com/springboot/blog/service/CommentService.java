@@ -14,9 +14,9 @@ public interface CommentService {
 //    CommentResponse getAllComments(int pageNum, int pageSize,
 //                             String sortBy, String sortDir);
 
-      CommentDto getCommentById(long postId, long commentId);
+    CommentDto getCommentById(long postId, long commentId);
 
-//    CommentDto updateCommentById(CommentDto postDto, long id);
+    CommentDto updateComment(long postId, long commentId, CommentDto commentRequest);
 
-//    void deleteCommentById(long id);
+    void deleteCommentById(long postId, long commentId);
 }

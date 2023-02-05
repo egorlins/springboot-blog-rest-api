@@ -71,6 +71,47 @@ public class CommentServiceImpl implements CommentService {
         return mapToDTO(comment);
     }
 
+    @Override
+    public CommentDto updateComment(long postId, long commentId, CommentDto commentRequest) {
+        // return Post entity by Id
+        Post post = postRepository.findById(postId).orElseThrow(
+                () -> new ResourceNotFoundExceprion("Post", "id", postId)
+        );
+        // return Comment entity by Id
+        Comment comment = commentRepository.findById(commentId).orElseThrow(
+                () -> new ResourceNotFoundExceprion("Comment", "id", commentId)
+        );
+
+        if (!comment.getPost().getId().equals(post.getId())){
+            throw new BlogAPIException(HttpStatus.BAD_REQUEST, "Comment does not belong to Post");
+        }
+
+        comment.setName(commentRequest.getName());
+        comment.setEmail(commentRequest.getEmail());
+        comment.setBody(commentRequest.getBody());
+
+        Comment updatedComment = commentRepository.save(comment);
+
+        return mapToDTO(updatedComment);
+    }
+
+    @Override
+    public void deleteCommentById(long postId, long commentId) {
+        // return Post entity by Id
+        Post post = postRepository.findById(postId).orElseThrow(
+                () -> new ResourceNotFoundExceprion("Post", "id", postId)
+        );
+        // return Comment entity by Id
+        Comment comment = commentRepository.findById(commentId).orElseThrow(
+                () -> new ResourceNotFoundExceprion("Comment", "id", commentId)
+        );
+
+        if (!comment.getPost().getId().equals(post.getId())){
+            throw new BlogAPIException(HttpStatus.BAD_REQUEST, "Comment does not belong to Post");
+        }
+        commentRepository.delete(comment);
+    }
+
     //convert entity to DTO
     private CommentDto mapToDTO(Comment comment) {
         CommentDto commentDto = new CommentDto();
