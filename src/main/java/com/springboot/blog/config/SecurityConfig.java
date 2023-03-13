@@ -23,55 +23,26 @@ public class SecurityConfig {
 
     private UserDetailsService userDetailsService;
 
-    public SecurityConfig(UserDetailsService userDetailsService){
+    public SecurityConfig(UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 
+    @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
 
     @Bean
-    public static PasswordEncoder passwordEncoder(){
+    public static PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        //enable only default auth
-        http.csrf().disable()
-                .authorizeHttpRequests((authorize) ->
-                        //authorize.anyRequest().authenticated()
-                        authorize.requestMatchers(HttpMethod.GET, "/api/**").permitAll()
-                                .anyRequest().authenticated()
-
-                ).httpBasic(Customizer.withDefaults());
+        http.csrf().disable().authorizeHttpRequests((authorize) -> authorize.requestMatchers(HttpMethod.GET, "/api/**").permitAll().requestMatchers("/api/auth/**").permitAll().anyRequest().authenticated());
 
         return http.build();
     }
 
-    //inmemory authentification
-//    @Bean
-//    public UserDetailsService userDetailsService(){
-//        UserDetails root = User.builder()
-//                .username("root")
-//                .password(passwordEncoder().encode("root"))
-//                .roles("ADMIN")
-//                .build();
-//
-//        UserDetails admin = User.builder()
-//                .username("admin")
-//                .password(passwordEncoder().encode("admin"))
-//                .roles("ADMIN")
-//                .build();
-//
-//        UserDetails jegor = User.builder()
-//                .username("jegor")
-//                .password(passwordEncoder().encode("jegor"))
-//                .roles("USER")
-//                .build();
-//
-//        return new InMemoryUserDetailsManager(root, admin, jegor);
-//    }
 }
