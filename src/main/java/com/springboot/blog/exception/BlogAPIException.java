@@ -2,7 +2,7 @@ package com.springboot.blog.exception;
 
 import org.springframework.http.HttpStatus;
 
-public class BlogAPIException extends RuntimeException{
+public class BlogAPIException extends RuntimeException {
     private HttpStatus status;
     private String message;
 
@@ -21,4 +21,7 @@ public class BlogAPIException extends RuntimeException{
         return status;
     }
 
+    public String getMessage() {
+        return message;
+    }
 }
