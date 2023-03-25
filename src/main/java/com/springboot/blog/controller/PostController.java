@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/posts")
 public class PostController {
@@ -60,5 +62,11 @@ public class PostController {
         //same as /return new ResponseEntity<>("Post deleted successfully", HttpStatus.OK);/
         postService.deletePostById(id);
         return ResponseEntity.ok("Post deleted successfully");
+    }
+
+    //get post by id
+    @GetMapping("/category/{id}")
+    public ResponseEntity<List<PostDto>> getPostsByCategoryId(@PathVariable(name = "id") long categoryId) {
+        return ResponseEntity.ok(postService.getPostsByCategory(categoryId));
     }
 }
