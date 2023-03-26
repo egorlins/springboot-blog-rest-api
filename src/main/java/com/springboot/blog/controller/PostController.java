@@ -81,7 +81,10 @@ public class PostController {
             responseCode = "200",
             description = "Http Status 200 SUCCESS"
     )
-    @GetMapping("/api/v1/posts/{id}")
+    @GetMapping("/api/v1/posts/{id}") //URI path
+    //@GetMapping(value="/api/posts/{id}", params="version=1") //URI query parameters
+    //@GetMapping(value="/api/posts/{id}", headers="X-API-VERSION=1") //Custom HEADERs version
+    //@GetMapping(value="/api/posts/{id}", produces="application/vnd.blog_app.v1+json") //content negotiation
     public ResponseEntity<PostDto> getPostByIdV1(@PathVariable(name = "id") long id) {
         return ResponseEntity.ok(postService.getPostById(id));
     }
@@ -95,7 +98,10 @@ public class PostController {
             responseCode = "200",
             description = "Http Status 200 SUCCESS"
     )
-    @GetMapping("/api/v2/posts/{id}")
+    @GetMapping("/api/v2/posts/{id}") //URI path
+    //@GetMapping(value = "/api/posts/{id}", params="version=2")  //URI query parameters
+    //@GetMapping(value="/api/posts/{id}", headers="X-API-VERSION=2") //Custom HEADERs version
+    //@GetMapping(value="/api/posts/{id}", produces="application/vnd.blog_app.v2+json") //content negotiation
     public ResponseEntity<PostDtoV2> getPostByIdV2(@PathVariable(name = "id") long id) {
         PostDto postDto = postService.getPostById(id);
         PostDtoV2 postDtoV2 = new PostDtoV2();
