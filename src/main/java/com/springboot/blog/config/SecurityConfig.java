@@ -2,6 +2,8 @@ package com.springboot.blog.config;
 
 import com.springboot.blog.security.JwtAuthenticationEntryPoint;
 import com.springboot.blog.security.JwtAuthenticationFilter;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +25,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableMethodSecurity
+//http://localhost:8080/swagger-ui/index.html#/
+//http://localhost:8080/v3/api-docs
+@SecurityScheme(
+        name = "Bearer Authentication for swagger",
+        type = SecuritySchemeType.HTTP,
+        bearerFormat = "JWT",
+        scheme = "bearer"
+)
 public class SecurityConfig {
 
     private UserDetailsService userDetailsService;
@@ -52,13 +62,14 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.csrf().disable().authorizeHttpRequests((authorize) ->
-                authorize.requestMatchers(HttpMethod.GET, "/api/**")
-                        .permitAll()
-                        .requestMatchers("/api/auth/**")
-                        .permitAll()
-                        .anyRequest()
-                        .authenticated()).exceptionHandling(exception -> exception
-                .authenticationEntryPoint(authenticationEntryPoint)
+                authorize
+                        .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/swagger-ui/**").permitAll() //swagger
+                        .requestMatchers("/v3/api-docs/**").permitAll()    //swagger
+                        .anyRequest().authenticated()
+                ).exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(authenticationEntryPoint)
         ).sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
