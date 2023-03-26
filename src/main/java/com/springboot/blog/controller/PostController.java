@@ -1,6 +1,7 @@
 package com.springboot.blog.controller;
 
 import com.springboot.blog.payload.PostDto;
+import com.springboot.blog.payload.PostDtoV2;
 import com.springboot.blog.payload.PostResponse;
 import com.springboot.blog.service.PostService;
 import com.springboot.blog.utils.AppConstants;
@@ -17,10 +18,11 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/posts")
+@RequestMapping()
 @Tag(
         name = "CRUD REST APIs for CRUD Resource"
 )
@@ -45,7 +47,7 @@ public class PostController {
             name = "Bearer Authentication for swagger"
     )
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping
+    @PostMapping("/api/v1/posts")
     public ResponseEntity<PostDto> createPost(@Valid @RequestBody PostDto postDto) {
         return new ResponseEntity<>(postService.createPost(postDto), HttpStatus.CREATED);
     }
@@ -59,7 +61,7 @@ public class PostController {
             responseCode = "200",
             description = "Http Status 200 SUCCESS"
     )
-    @GetMapping
+    @GetMapping("/api/v1/posts")
     public PostResponse getAllPosts(
             @RequestParam(value = "pageNum", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNum,
             @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
@@ -79,9 +81,36 @@ public class PostController {
             responseCode = "200",
             description = "Http Status 200 SUCCESS"
     )
-    @GetMapping("/{id}")
-    public ResponseEntity<PostDto> getPostById(@PathVariable(name = "id") long id) {
+    @GetMapping("/api/v1/posts/{id}")
+    public ResponseEntity<PostDto> getPostByIdV1(@PathVariable(name = "id") long id) {
         return ResponseEntity.ok(postService.getPostById(id));
+    }
+
+    //get post by id
+    @Operation(
+            summary = "Get Post by ID REST API with Tags",
+            description = "Get Post by ID REST API with Tags is used to get single post from the database"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "Http Status 200 SUCCESS"
+    )
+    @GetMapping("/api/v2/posts/{id}")
+    public ResponseEntity<PostDtoV2> getPostByIdV2(@PathVariable(name = "id") long id) {
+        PostDto postDto = postService.getPostById(id);
+        PostDtoV2 postDtoV2 = new PostDtoV2();
+        postDtoV2.setId(postDto.getId());
+        postDtoV2.setTitle(postDto.getTitle());
+        postDtoV2.setDescription(postDto.getDescription());
+        postDtoV2.setContent(postDto.getContent());
+        postDtoV2.setCategoryId(postDto.getCategoryId());
+        postDtoV2.setComments(postDto.getComments());
+        List<String> tags = new ArrayList<>();
+        tags.add("Java");
+        tags.add("Spring Boot");
+        tags.add("Aws");
+        postDtoV2.setTags(tags);
+        return ResponseEntity.ok(postDtoV2);
     }
 
     //update post by id
@@ -97,7 +126,7 @@ public class PostController {
             name = "Bearer Authentication for swagger"
     )
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/{id}")
+    @PutMapping("/api/v1/posts/{id}")
     public ResponseEntity<PostDto> updatePostById(@Valid @RequestBody PostDto postDto,
                                                   @PathVariable(name = "id") long id) {
         return ResponseEntity.ok(postService.updatePostById(postDto, id));
@@ -115,7 +144,7 @@ public class PostController {
             name = "Bearer Authentication for swagger"
     )
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/api/v1/posts/{id}")
     public ResponseEntity<String> deletePostById(@PathVariable(name = "id") long id) {
         //same as /return new ResponseEntity<>("Post deleted successfully", HttpStatus.OK);/
         postService.deletePostById(id);
@@ -123,7 +152,7 @@ public class PostController {
     }
 
     //get post by id
-    @GetMapping("/category/{id}")
+    @GetMapping("/api/v1/posts/category/{id}")
     public ResponseEntity<List<PostDto>> getPostsByCategoryId(@PathVariable(name = "id") long categoryId) {
         return ResponseEntity.ok(postService.getPostsByCategory(categoryId));
     }
