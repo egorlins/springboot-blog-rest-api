@@ -13,6 +13,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
 @OpenAPIDefinition(
@@ -35,6 +36,7 @@ import org.springframework.context.annotation.Bean;
 				url = "https://github.com/egorlins/springboot-blog-rest-api"
 		)
 )
+//use this annotation only if using plain spring framework without springboot @EnableTransactionManagement
 public class SpringbootBlogRestApiApplication  implements CommandLineRunner {
 	@Bean
 	public ModelMapper modelMapper(){
